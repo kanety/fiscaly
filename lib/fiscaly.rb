@@ -3,6 +3,8 @@ require 'active_support/core_ext/time'
 require 'fiscaly/version'
 
 class Fiscaly
+  KEY = :fiscaly_start_month
+
   cattr_accessor :start_month
   @@start_month = 4
 
@@ -10,7 +12,7 @@ class Fiscaly
   attr_reader :start_month
 
   def initialize(date, start_month: nil)
-    @start_month = start_month || self.class.start_month
+    @start_month = start_month || self.class.global_start_month
     @date = date
   end
 
@@ -106,7 +108,7 @@ class Fiscaly
     end
 
     def fdate(date, options = {})
-      self.new(normalize(date, options[:start_month] || self.start_month), options)
+      self.new(normalize(date, options[:start_month]), options)
     end
 
     def fparse(str, options = {})
@@ -117,9 +119,21 @@ class Fiscaly
       fdate(Date.new(fyear, month, day), options)
     end
 
+    def with_start_month(start_month)
+      Thread.current[KEY] = start_month
+      yield
+    ensure
+      Thread.current[KEY] = nil
+    end
+
+    def global_start_month
+      Thread.current[KEY] || self.start_month
+    end
+
     private
 
     def normalize(date, start_month)
+      start_month ||= global_start_month
       if date.month < start_month
         Date.new(date.year + 1, date.month, date.day)
       else

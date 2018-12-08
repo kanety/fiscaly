@@ -40,11 +40,16 @@ Fiscaly.fparse("2017-01-01")
 Change the start month of financial year:
 
 ```ruby
-# set globally
+# set globally (non thread-safe)
 Fiscaly.start_month = 4
 
-# set locally
+# set by argument
 Fiscaly.date(date, start_month: 4)
+
+# set by block
+Fiscaly.with_start_month(4) do
+  ...
+end
 ```
 
 Get range of financial calendar:

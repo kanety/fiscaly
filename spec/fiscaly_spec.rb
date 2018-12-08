@@ -47,11 +47,20 @@ describe Fiscaly do
     end
   end
 
-  it 'changes start month locally' do
+  it 'sets start month by argument' do
     fiscal = Fiscaly.ymd(2017, 2, 1, start_month: 3)
     expect(fiscal.fyear).to eq(2016)
     fiscal = Fiscaly.ymd(2017, 3, 1, start_month: 3)
     expect(fiscal.fyear).to eq(2017)
+  end
+
+  it 'sets start month by block' do
+    Fiscaly.with_start_month(3) do
+      fiscal = Fiscaly.ymd(2017, 2, 1)
+      expect(fiscal.fyear).to eq(2016)
+      fiscal = Fiscaly.ymd(2017, 3, 1)
+      expect(fiscal.fyear).to eq(2017)
+    end
   end
 
   it 'has today' do
