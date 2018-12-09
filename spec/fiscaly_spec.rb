@@ -48,18 +48,20 @@ describe Fiscaly do
   end
 
   it 'sets start month by argument' do
-    fiscal = Fiscaly.ymd(2017, 2, 1, start_month: 3)
-    expect(fiscal.fyear).to eq(2016)
-    fiscal = Fiscaly.ymd(2017, 3, 1, start_month: 3)
-    expect(fiscal.fyear).to eq(2017)
+    expect(Fiscaly.ymd(2017, 2, 1, start_month: 3).fyear).to eq(2016)
+    expect(Fiscaly.ymd(2017, 3, 1, start_month: 3).fyear).to eq(2017)
   end
 
   it 'sets start month by block' do
     Fiscaly.with_start_month(3) do
-      fiscal = Fiscaly.ymd(2017, 2, 1)
-      expect(fiscal.fyear).to eq(2016)
-      fiscal = Fiscaly.ymd(2017, 3, 1)
-      expect(fiscal.fyear).to eq(2017)
+      expect(Fiscaly.ymd(2017, 2, 1).fyear).to eq(2016)
+      expect(Fiscaly.ymd(2017, 3, 1).fyear).to eq(2017)
+      Fiscaly.with_start_month(4) do
+        expect(Fiscaly.ymd(2017, 3, 1).fyear).to eq(2016)
+        expect(Fiscaly.ymd(2017, 4, 1).fyear).to eq(2017)
+      end
+      expect(Fiscaly.ymd(2017, 2, 1).fyear).to eq(2016)
+      expect(Fiscaly.ymd(2017, 3, 1).fyear).to eq(2017)
     end
   end
 
@@ -92,6 +94,10 @@ describe Fiscaly do
     expect(fiscal.beginning_of_fhalf).to eq(first)
     expect(fiscal.end_of_fhalf).to eq(last)
     expect(fiscal.range_of_fhalf).to eq(first..last)
+  end
+
+  it 'has range of financial half-year(0)' do
+    fiscal = Fiscaly.ymd(2017, 3)
 
     first = Date.new(2016, 4, 1)
     last = Date.new(2016, 9, 30)
@@ -108,6 +114,10 @@ describe Fiscaly do
     expect(fiscal.beginning_of_fquarter).to eq(first)
     expect(fiscal.end_of_fquarter).to eq(last)
     expect(fiscal.range_of_fquarter).to eq(first..last)
+  end
+
+  it 'has range of financial quarter(0)' do
+    fiscal = Fiscaly.ymd(2017, 3)
 
     first = Date.new(2016, 4, 1)
     last = Date.new(2016, 6, 30)

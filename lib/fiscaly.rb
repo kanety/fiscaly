@@ -120,14 +120,16 @@ class Fiscaly
     end
 
     def with_start_month(start_month)
-      Thread.current[KEY] = start_month
+      Thread.current[KEY] ||= []
+      Thread.current[KEY].push(start_month)
       yield
     ensure
-      Thread.current[KEY] = nil
+      Thread.current[KEY].pop
+      Thread.current[KEY] = nil if Thread.current[KEY].empty?
     end
 
     def global_start_month
-      Thread.current[KEY] || self.start_month
+      (Thread.current[KEY].is_a?(Array) && Thread.current[KEY][-1]) || self.start_month
     end
 
     private
