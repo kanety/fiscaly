@@ -53,7 +53,7 @@ class Fiscaly
       beginning_of_fyear + (index * 6).months
     else
       date = beginning_of_fyear
-      date += 6.months until @date <= date
+      date += 6.months until @date < date
       date -= 6.months
     end
   end
@@ -71,7 +71,7 @@ class Fiscaly
       beginning_of_fyear + (index * 3).months
     else
       date = beginning_of_fyear
-      date += 3.months until @date <= date
+      date += 3.months until @date < date
       date -= 3.months
     end
   end

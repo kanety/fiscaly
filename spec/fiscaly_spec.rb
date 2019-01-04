@@ -77,23 +77,33 @@ describe Fiscaly do
   end
 
   it 'has range of financial year' do
-    fiscal = Fiscaly.ymd(2017, 3)
+    fiscals = [
+      Fiscaly.ymd(2016, 4, 1),
+      Fiscaly.ymd(2017, 3, 31)
+    ]
 
     first = Date.new(2016, 4, 1)
     last = Date.new(2017, 3, 31)
-    expect(fiscal.beginning_of_fyear).to eq(first)
-    expect(fiscal.end_of_fyear).to eq(last)
-    expect(fiscal.range_of_fyear).to eq(first..last)
+    fiscals.each do |fiscal|
+      expect(fiscal.beginning_of_fyear).to eq(first)
+      expect(fiscal.end_of_fyear).to eq(last)
+      expect(fiscal.range_of_fyear).to eq(first..last)
+    end
   end
 
   it 'has range of financial half-year' do
-    fiscal = Fiscaly.ymd(2017, 3)
+    fiscals = [
+      Fiscaly.ymd(2016, 10, 1),
+      Fiscaly.ymd(2017, 3, 31)
+    ]
 
     first = Date.new(2016, 10, 1)
     last = Date.new(2017, 3, 31)
-    expect(fiscal.beginning_of_fhalf).to eq(first)
-    expect(fiscal.end_of_fhalf).to eq(last)
-    expect(fiscal.range_of_fhalf).to eq(first..last)
+    fiscals.each do |fiscal|
+      expect(fiscal.beginning_of_fhalf).to eq(first)
+      expect(fiscal.end_of_fhalf).to eq(last)
+      expect(fiscal.range_of_fhalf).to eq(first..last)
+    end
   end
 
   it 'has range of financial half-year(0)' do
@@ -107,13 +117,18 @@ describe Fiscaly do
   end
 
   it 'has range of financial quarter' do
-    fiscal = Fiscaly.ymd(2017, 3)
+    fiscals = [
+      Fiscaly.ymd(2017, 1, 1),
+      Fiscaly.ymd(2017, 3, 31)
+    ]
 
     first = Date.new(2017, 1, 1)
     last = Date.new(2017, 3, 31)
-    expect(fiscal.beginning_of_fquarter).to eq(first)
-    expect(fiscal.end_of_fquarter).to eq(last)
-    expect(fiscal.range_of_fquarter).to eq(first..last)
+    fiscals.each do |fiscal|
+      expect(fiscal.beginning_of_fquarter).to eq(first)
+      expect(fiscal.end_of_fquarter).to eq(last)
+      expect(fiscal.range_of_fquarter).to eq(first..last)
+    end
   end
 
   it 'has range of financial quarter(0)' do
@@ -127,13 +142,18 @@ describe Fiscaly do
   end
 
   it 'has range of month' do
-    fiscal = Fiscaly.ymd(2017, 3)
+    fiscals = [
+      Fiscaly.ymd(2017, 3, 1),
+      Fiscaly.ymd(2017, 3, 31)
+    ]
 
     first = Date.new(2017, 3, 1)
     last = Date.new(2017, 3, 31)
-    expect(fiscal.beginning_of_month).to eq(first)
-    expect(fiscal.end_of_month).to eq(last)
-    expect(fiscal.range_of_month).to eq(first..last)
+    fiscals.each do |fiscal|
+      expect(fiscal.beginning_of_month).to eq(first)
+      expect(fiscal.end_of_month).to eq(last)
+      expect(fiscal.range_of_month).to eq(first..last)
+    end
   end
 
   it 'has date methods' do
