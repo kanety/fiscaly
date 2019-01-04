@@ -47,6 +47,16 @@ describe Fiscaly do
     end
   end
 
+  it 'is created from leap date' do
+    fiscals = [
+      Fiscaly.fparse("2019-02-29"),
+      Fiscaly.fymd(2019, 2, 29)
+    ]
+    fiscals.each do |fiscal|
+      expect(fiscal.year).to eq(2020)
+    end
+  end
+
   it 'sets start month by argument' do
     expect(Fiscaly.ymd(2017, 2, 1, start_month: 3).fyear).to eq(2016)
     expect(Fiscaly.ymd(2017, 3, 1, start_month: 3).fyear).to eq(2017)

@@ -107,16 +107,17 @@ class Fiscaly
       date(Date.new(year, month, day), options)
     end
 
-    def fdate(date, options = {})
-      self.new(normalize(date, options[:start_month]), options)
+    def fdate(fdate, options = {})
+      fymd(fdate.year, fdate.month, fdate.day, options)
     end
 
-    def fparse(str, options = {})
-      fdate(Date.parse(str), options)
+    def fparse(fstr, options = {})
+      parsed = Date._parse(fstr)
+      fymd(parsed[:year], parsed[:mon], parsed[:mday], options)
     end
 
     def fymd(fyear, month = 1, day = 1, options = {})
-      fdate(Date.new(fyear, month, day), options)
+      self.new(normalize(fyear, month, day, options[:start_month]), options)
     end
 
     def with_start_month(start_month)
@@ -134,13 +135,11 @@ class Fiscaly
 
     private
 
-    def normalize(date, start_month)
+    def normalize(fyear, month, day, start_month)
       start_month ||= global_start_month
-      if date.month < start_month
-        Date.new(date.year + 1, date.month, date.day)
-      else
-        date
-      end
+      year = fyear
+      year += 1 if month < start_month
+      Date.new(year, month, day)
     end
   end
 end
