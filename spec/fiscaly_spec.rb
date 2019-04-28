@@ -1,6 +1,7 @@
 describe Fiscaly do
   before {
     Fiscaly.start_month = 4
+    Fiscaly.start_day = 1
     Fiscaly.forward_fyear = false
   }
 
@@ -11,7 +12,7 @@ describe Fiscaly do
   it 'is created from normal date' do
     fiscals = [
       Fiscaly.date(Date.new(2017, 3)),
-      Fiscaly.parse("2017-03-01"),
+      Fiscaly.parse('2017-03-01'),
       Fiscaly.ymd(2017, 3)
     ]
     fiscals.each do |fiscal|
@@ -20,7 +21,7 @@ describe Fiscaly do
 
     fiscals = [
       Fiscaly.date(Date.new(2017, 4)),
-      Fiscaly.parse("2017-04-01"),
+      Fiscaly.parse('2017-04-01'),
       Fiscaly.ymd(2017, 4)
     ]
     fiscals.each do |fiscal|
@@ -28,10 +29,10 @@ describe Fiscaly do
     end
   end
 
-  it 'is created from date with financial year' do
+  it 'is created from date with fiscal year' do
     fiscals = [
       Fiscaly.fdate(Date.new(2017, 3, 1)),
-      Fiscaly.fparse("2017-03-01"),
+      Fiscaly.fparse('2017-03-01'),
       Fiscaly.fymd(2017, 3, 1)
     ]
     fiscals.each do |fiscal|
@@ -40,7 +41,7 @@ describe Fiscaly do
 
     fiscals = [
       Fiscaly.fdate(Date.new(2017, 4, 1)),
-      Fiscaly.fparse("2017-04-01"),
+      Fiscaly.fparse('2017-04-01'),
       Fiscaly.fymd(2017, 4, 1)
     ]
     fiscals.each do |fiscal|
@@ -50,7 +51,7 @@ describe Fiscaly do
 
   it 'is created from leap date' do
     fiscals = [
-      Fiscaly.fparse("2019-02-29"),
+      Fiscaly.fparse('2019-02-29'),
       Fiscaly.fymd(2019, 2, 29)
     ]
     fiscals.each do |fiscal|
@@ -62,14 +63,14 @@ describe Fiscaly do
     expect(Fiscaly.today.date).to eq(Date.today)
   end
 
-  it 'has financial date method' do
+  it 'has fiscal date method' do
     fiscal = Fiscaly.ymd(2017, 3, 10)
 
     expect(fiscal.fdate).to eq(Date.new(2016, 3, 10))
     expect(fiscal.fyear).to eq(2016)
   end
 
-  it 'has range of financial year' do
+  it 'has range of fiscal year' do
     fiscals = [
       Fiscaly.ymd(2016, 4, 1),
       Fiscaly.ymd(2017, 3, 31)
@@ -84,7 +85,7 @@ describe Fiscaly do
     end
   end
 
-  it 'has range of financial half-year' do
+  it 'has range of fiscal half-year' do
     fiscals = [
       Fiscaly.ymd(2016, 10, 1),
       Fiscaly.ymd(2017, 3, 31)
@@ -99,7 +100,7 @@ describe Fiscaly do
     end
   end
 
-  it 'has range of financial half-year(0)' do
+  it 'has range of fiscal half-year(0)' do
     fiscal = Fiscaly.ymd(2017, 3)
 
     first = Date.new(2016, 4, 1)
@@ -109,7 +110,7 @@ describe Fiscaly do
     expect(fiscal.range_of_fhalf(0)).to eq(first..last)
   end
 
-  it 'has range of financial quarter' do
+  it 'has range of fiscal quarter' do
     fiscals = [
       Fiscaly.ymd(2017, 1, 1),
       Fiscaly.ymd(2017, 3, 31)
@@ -124,7 +125,7 @@ describe Fiscaly do
     end
   end
 
-  it 'has range of financial quarter(0)' do
+  it 'has range of fiscal quarter(0)' do
     fiscal = Fiscaly.ymd(2017, 3)
 
     first = Date.new(2016, 4, 1)
@@ -132,6 +133,21 @@ describe Fiscaly do
     expect(fiscal.beginning_of_fquarter(0)).to eq(first)
     expect(fiscal.end_of_fquarter(0)).to eq(last)
     expect(fiscal.range_of_fquarter(0)).to eq(first..last)
+  end
+
+  it 'has range of fiscal month' do
+    fiscals = [
+      Fiscaly.ymd(2017, 3, 1),
+      Fiscaly.ymd(2017, 3, 31)
+    ]
+
+    first = Date.new(2017, 3, 1)
+    last = Date.new(2017, 3, 31)
+    fiscals.each do |fiscal|
+      expect(fiscal.beginning_of_fmonth).to eq(first)
+      expect(fiscal.end_of_fmonth).to eq(last)
+      expect(fiscal.range_of_fmonth).to eq(first..last)
+    end
   end
 
   it 'has range of month' do
@@ -157,21 +173,21 @@ describe Fiscaly do
     expect(fiscal.day).to eq(10)
   end
 
-  it 'sets start month by argument' do
-    expect(Fiscaly.ymd(2017, 2, 1, start_month: 3).fyear).to eq(2016)
-    expect(Fiscaly.ymd(2017, 3, 1, start_month: 3).fyear).to eq(2017)
+  it 'sets options by argument' do
+    expect(Fiscaly.ymd(2017, 3, 1, start_month: 3, start_day: 10).fyear).to eq(2016)
+    expect(Fiscaly.ymd(2017, 3, 10, start_month: 3, start_day: 10).fyear).to eq(2017)
   end
 
-  it 'sets start month by block' do
-    Fiscaly.with(start_month: 3) do
-      expect(Fiscaly.ymd(2017, 2, 1).fyear).to eq(2016)
-      expect(Fiscaly.ymd(2017, 3, 1).fyear).to eq(2017)
-      Fiscaly.with(start_month: 4) do
-        expect(Fiscaly.ymd(2017, 3, 1).fyear).to eq(2016)
-        expect(Fiscaly.ymd(2017, 4, 1).fyear).to eq(2017)
+  it 'sets options by block' do
+    Fiscaly.with(start_month: 3, start_day: 10) do
+      expect(Fiscaly.ymd(2017, 3, 1).fyear).to eq(2016)
+      expect(Fiscaly.ymd(2017, 3, 10).fyear).to eq(2017)
+      Fiscaly.with(start_month: 4, start_day: 20) do
+        expect(Fiscaly.ymd(2017, 4, 10).fyear).to eq(2016)
+        expect(Fiscaly.ymd(2017, 4, 20).fyear).to eq(2017)
       end
-      expect(Fiscaly.ymd(2017, 2, 1).fyear).to eq(2016)
-      expect(Fiscaly.ymd(2017, 3, 1).fyear).to eq(2017)
+      expect(Fiscaly.ymd(2017, 3, 1).fyear).to eq(2016)
+      expect(Fiscaly.ymd(2017, 3, 10).fyear).to eq(2017)
     end
   end
 

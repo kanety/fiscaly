@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.2.0
+
+Features:
+
+* Add start_day option.
+
 ## 1.1.0
 
 Features:

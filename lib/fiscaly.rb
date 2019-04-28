@@ -5,12 +5,6 @@ require 'fiscaly/version'
 class Fiscaly
   KEY = :fiscaly_options
 
-  cattr_accessor :options
-  @@options = {
-    start_month: 4,
-    forward_fyear: false
-  }
-
   attr_reader :date
   attr_reader :options
 
@@ -31,13 +25,17 @@ class Fiscaly
     @options[:start_month]
   end
 
+  def start_day
+    @options[:start_day]
+  end
+
   def forward_fyear?
     @options[:forward_fyear]
   end
 
   def fyear
     fy = @date.year
-    fy -= 1 if @date.month < start_month
+    fy -= 1 if @date.month < start_month || (@date.month == start_month && @date.day < start_day)
     fy += 1 if forward_fyear?
     fy
   end
@@ -48,11 +46,11 @@ class Fiscaly
 
   def beginning_of_fyear
     year = forward_fyear? ? fyear - 1 : fyear
-    Date.new(year, start_month)
+    Date.new(year, start_month, start_day)
   end
 
   def end_of_fyear
-    (beginning_of_fyear + 11.months).end_of_month
+    beginning_of_fyear + 12.months - 1.days
   end
 
   def range_of_fyear
@@ -70,7 +68,7 @@ class Fiscaly
   end
 
   def end_of_fhalf(index = nil)
-    (beginning_of_fhalf(index) + 5.months).end_of_month
+    beginning_of_fhalf(index) + 6.months - 1.days
   end
 
   def range_of_fhalf(index = nil)
@@ -88,11 +86,23 @@ class Fiscaly
   end
 
   def end_of_fquarter(index = nil)
-    (beginning_of_fquarter(index) + 2.months).end_of_month
+    beginning_of_fquarter(index) + 3.months - 1.days
   end
 
   def range_of_fquarter(index = nil)
     beginning_of_fquarter(index)..end_of_fquarter(index)
+  end
+
+  def beginning_of_fmonth
+    Date.new(year, month, start_day)
+  end
+
+  def end_of_fmonth
+    beginning_of_fmonth + 1.month - 1.days
+  end
+
+  def range_of_fmonth
+    beginning_of_fmonth..end_of_fmonth
   end
 
   def range_of_month
@@ -102,6 +112,14 @@ class Fiscaly
   private
 
   class << self
+    attr_accessor :options
+
+    @@options = {
+      start_month: 4,
+      start_day: 1,
+      forward_fyear: false
+    }
+
     def today(options = {})
       date(Date.today, options)
     end
@@ -148,6 +166,10 @@ class Fiscaly
       @@options[:start_month] = val
     end
 
+    def start_day=(val)
+      @@options[:start_day] = val
+    end
+
     def forward_fyear=(val)
       @@options[:forward_fyear] = val
     end
@@ -157,7 +179,7 @@ class Fiscaly
     def normalize(fyear, month, day, options = {})
       options = global_options.merge(options)
       year = fyear
-      year += 1 if month < options[:start_month]
+      year += 1 if month < options[:start_month] || (month == options[:start_month] && day < options[:start_day])
       year -= 1 if options[:forward_fyear]
       Date.new(year, month, day)
     end
