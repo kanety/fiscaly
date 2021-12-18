@@ -1,5 +1,5 @@
-require 'active_support/core_ext/integer'
-require 'active_support/core_ext/time'
+require 'active_support'
+require 'active_support/core_ext'
 require 'fiscaly/version'
 
 class Fiscaly
