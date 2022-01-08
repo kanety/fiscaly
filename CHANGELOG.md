@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.1
+
+* Support activesupport 7.0.
+
 ## 1.2.0
 
 Features:
