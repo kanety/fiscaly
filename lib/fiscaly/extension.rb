@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Fiscaly
   module Extension
     def fiscaly(options = {})
