@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.2
+
+* Add `frozen_string_literal: true`.
+
 ## 1.2.1
 
 * Support activesupport 7.0.
