@@ -2,4 +2,9 @@ source 'https://rubygems.org'
 
 gem "activesupport", "~> 7.0.1"
 
+if RUBY_VERSION >= "3.4"
+  gem "bigdecimal"
+  gem "mutex_m"
+end
+
 gemspec path: "../"
